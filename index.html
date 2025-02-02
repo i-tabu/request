@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Simple HTTP Client</title>
+  <title>Simple HTTP Client with Loader</title>
   <!-- Bootstrap CSS (Replace with the latest Bootstrap CDN link if needed) -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -58,7 +58,7 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS (Optional, for certain components) -->
+  <!-- Bootstrap JS (Optional) -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
   ></script>
@@ -77,21 +77,33 @@
       // Clear previous response
       responseOutput.value = '';
 
+      // If URL is empty, show an alert and stop
       if (!url) {
         alert('Please enter a valid URL');
         return;
       }
 
+      // Store the original button text
+      const originalBtnText = sendBtn.innerHTML;
+
+      // Show loader on the button
+      sendBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`;
+      sendBtn.disabled = true;
+
       try {
         // Send the request using Fetch API
         const response = await fetch(url, { method });
-        // Get the response as text (you can also use .json() if it's JSON)
+        // Get the response text (or use .json() if expecting JSON)
         const data = await response.text();
 
         // Display the response in the textarea
         responseOutput.value = data;
       } catch (error) {
         responseOutput.value = `Error: ${error}`;
+      } finally {
+        // Restore the button text and enable it
+        sendBtn.innerHTML = originalBtnText;
+        sendBtn.disabled = false;
       }
     });
   </script>
